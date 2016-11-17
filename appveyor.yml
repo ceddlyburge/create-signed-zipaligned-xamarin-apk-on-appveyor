@@ -1,0 +1,10 @@
+environment:
+  keystore-password:
+    secure: pGrDZahzdzmTIoHkPspWbQ== # password for keystore
+before_build:
+- nuget restore
+- appveyor-retry dotnet restore -v Minimal
+build_script:
+- msbuild /verbosity:quiet "/t:SignAndroidPackage" "/p:Configuration=Release" "/p:AndroidKeyStore=true" "/p:AndroidSigningKeyAlias=cuddlyburger" "/p:AndroidSigningKeyPass=%keystore-password%" "/p:AndroidSigningKeyStore=XamarinFormsPortable.Droid\cuddlyburger.KeyStore" "/p:AndroidSigningStorePass=%keystore-password%"  "XamarinFormsPortable.Droid\XamarinFormsPortable.Droid.csproj"
+artifacts:
+  - path: XamarinFormsPortable.Droid\bin\Release\com.create_signed_zipaligned_xamarin_apk_on_appveyor-Signed.apk
